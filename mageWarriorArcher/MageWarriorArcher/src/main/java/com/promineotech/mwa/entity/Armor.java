@@ -9,6 +9,6 @@ public class Armor {
 	private int armorId;
 	private String name;
 	private int effectiveness;
-	private Location location;
+	private String location;
 
 }

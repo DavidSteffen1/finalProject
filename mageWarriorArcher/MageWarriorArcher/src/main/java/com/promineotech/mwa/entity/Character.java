@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Character implements Comparable<Character> {
-  private int characterId;  
+  private Integer characterId;  
   private String name;  
-  private FightingStyle fightingStyle;
+  private String fightingStyle;
 
 @Override
 public int compareTo(Character that) {
