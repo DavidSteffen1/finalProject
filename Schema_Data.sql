@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `character`;
 CREATE TABLE `character` (
 	character_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(45),
-    fighting_style ENUM('MAGIC', 'WARRIOR', 'ARCHERY'),
+    fighting_style VARCHAR(20),
     PRIMARY KEY (character_id)
     );
     

@@ -9,6 +9,6 @@ VALUES (1, 'Wand', NULL),
 (3, 'Bow', NULL);
 
 INSERT INTO `character` (character_id, name, fighting_style)
-VALUES (1, 'Gandalf', MAGIC), 
-(2, 'Sun Tzu', WARRIOR), 
-(3, 'Robin Hood', ARCHERY);
+VALUES (1, 'Gandalf', 'MAGIC'), 
+(2, 'Sun Tzu', 'WARRIOR'), 
+(3, 'Robin Hood', 'ARCHERY');
