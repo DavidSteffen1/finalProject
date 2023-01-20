@@ -14,7 +14,11 @@ public class BaseTest {
   @Getter
   protected TestRestTemplate restTemplate;
   
-  protected String getBaseUri() {
+  protected String getBaseUriForCharacters() {
     return String.format("http://localhost:%d/characters", serverPort);
   }
+  
+  protected String getBaseUriForCharacterCreation() {
+	    return String.format("http://localhost:%d/create", serverPort);
+	  }
 }

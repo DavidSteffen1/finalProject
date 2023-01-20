@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import com.promineotech.mwa.dao.CharacterDao;
 import com.promineotech.mwa.entity.Character;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class DefaultCharacterService implements CharacterService {
 
 	  @Autowired

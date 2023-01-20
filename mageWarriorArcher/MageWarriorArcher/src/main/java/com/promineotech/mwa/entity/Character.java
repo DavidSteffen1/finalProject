@@ -1,6 +1,7 @@
 package com.promineotech.mwa.entity;
 
 import java.util.Comparator;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 
 public class Character implements Comparable<Character> {
+  
   private Integer characterId;  
   private String name;  
   private String fightingStyle;

@@ -6,28 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.promineotech.mwa.entity.Character;
 import com.promineotech.mwa.exception.DbException;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Component
 @Service
-@Slf4j
 
 public class DefaultCharacterDao extends DaoBase implements CharacterDao {
-
-	  @Autowired
-	  private NamedParameterJdbcTemplate jdbcTemplate; 
 	  
 	  @Override
 	  public List<Character> fetchCharacters() {
-			String sql = "SELECT * FROM " + CHARACTER_TABLE + " ORDER BY character_id";
+			String sql = "SELECT * FROM `character` ORDER BY character_id";
 			
 			try(Connection conn = DbConnection.getConnection()) {
 				startTransaction(conn);

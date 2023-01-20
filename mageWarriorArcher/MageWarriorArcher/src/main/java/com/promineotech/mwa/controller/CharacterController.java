@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
 import com.promineotech.mwa.entity.Character;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,12 +18,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RequestMapping("/characters")
 
-@OpenAPIDefinition(info = @Info(title = "MageWarriorArcher project"), servers = {
+@OpenAPIDefinition(info = @Info(title = "Character List"), servers = {
     @Server(url = "http://localhost:8080", description = "Local server.")})
 
 public interface CharacterController {
   //@formatter:off
-  @Operation(
+  /**
+ * @GetMapping for characters
+ */
+@Operation(
       summary = "Returns a list of all Characters",
       description = "Returns a list of all Characters",
       responses = {
@@ -50,6 +54,6 @@ public interface CharacterController {
 
   @GetMapping(path="/all")
   @ResponseStatus(code = HttpStatus.OK)
-  List<Character> fetchCharacters();
-  //@formatter:on
+  public List<Character> fetchCharacters();
+
 }
