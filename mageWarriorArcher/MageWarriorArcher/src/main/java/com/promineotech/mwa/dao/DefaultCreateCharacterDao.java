@@ -43,9 +43,9 @@ public class DefaultCreateCharacterDao implements CreateCharacterDao {
 		// @formatter:off
 		String sql = ""
 				+ "INSERT INTO `character` ("
-				+ "name, fightingStyle"
+				+ "name"
 				+ ") VALUES ("
-				+ ":name, :fightingStyle"
+				+ ":name"
 				+ ")";
 		// @formatter:on
 		
@@ -59,11 +59,12 @@ public class DefaultCreateCharacterDao implements CreateCharacterDao {
 	}
 
 	@Override
-	public Character fetchCharacter(String name) {
+	public Character fetchCharacter(String name, String fightingStyle) {
 		String sql = "SELECT * FROM `character` WHERE name = :name";
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("name", name);
+		params.put("fightingStyle", fightingStyle);
 	
 		return jdbcTemplate.query(sql, params, new CharacterResultSetExtractor());
 	}

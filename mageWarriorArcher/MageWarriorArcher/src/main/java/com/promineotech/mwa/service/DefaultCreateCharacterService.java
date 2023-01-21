@@ -17,9 +17,8 @@ public class DefaultCreateCharacterService implements CreateCharacterService {
 	@Transactional
 	@Override
 	public Character createNewCharacter(CharacterRequest characterRequest) {
-		Character character = createCharacterDao.fetchCharacter(characterRequest.getName());
 		
-		return createCharacterDao.saveCharacter(character.getName(), character.getFightingStyle());
+		return createCharacterDao.saveCharacter(characterRequest.getName(), characterRequest.getFightingStyle());
 	}
 
 }
