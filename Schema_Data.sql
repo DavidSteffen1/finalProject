@@ -21,8 +21,8 @@ CREATE TABLE armor (
     
 CREATE TABLE weapons (
 	weapon_id INT NOT NULL AUTO_INCREMENT,
-	weapon_name VARCHAR(20),
-    weapon_effectiveness INT,
+	name VARCHAR(20),
+    effectiveness INT,
     PRIMARY KEY (weapon_id)
     );  
     
