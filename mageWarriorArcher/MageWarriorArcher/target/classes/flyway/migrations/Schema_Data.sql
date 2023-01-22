@@ -13,16 +13,16 @@ CREATE TABLE `character` (
     
 CREATE TABLE armor (
 	armor_id INT NOT NULL AUTO_INCREMENT,
-	armor_name VARCHAR(20),
-    armor_effectiveness INT,
-    armor_location ENUM('HEAD', 'CHEST', 'FEET'),
+	name VARCHAR(20),
+    effectiveness INT,
+    location VARCHAR(20),
     PRIMARY KEY (armor_id)
     ); 
     
 CREATE TABLE weapons (
 	weapon_id INT NOT NULL AUTO_INCREMENT,
-	weapon_name VARCHAR(20),
-    weapon_effectiveness INT,
+	name VARCHAR(20),
+    effectiveness INT,
     PRIMARY KEY (weapon_id)
     );  
     

@@ -31,7 +31,7 @@ import com.promineotech.mwa.entity.Character;
 	 "classpath:flyway/migrations/Table_Data.sql"},
     config = @SqlConfig(encoding = "utf-8"))
 
-class CreateCharacterTest extends CreateCharacterTestSupport{
+class CreateCharacterTestOld extends CreateCharacterTestSupport{
 
 	@Test
 	void testCreateCharacterReturnsSuccess201() {
@@ -39,7 +39,8 @@ class CreateCharacterTest extends CreateCharacterTestSupport{
 		
 		// @formatter:off
 		String body = "{\n"
-				+ "  \"name\":\"Katniss_Everdeen\"\n"
+				+ "  \"name\":\"Katniss_Everdeen\",\n"
+				+ "  \"fightingStyle\":\"ARCHERY\"\n"
 				+ "}";
 		// @formatter:on
 		
@@ -60,7 +61,8 @@ class CreateCharacterTest extends CreateCharacterTestSupport{
 		assertThat(response.getBody()).isNotNull();
 		
 		Character character = response.getBody();
-		assertThat(character.getName()).isEqualTo("Katniss_Everdeen");	
+		assertThat(character.getName()).isEqualTo("Katniss_Everdeen");
+		assertThat(character.getFightingStyle()).isEqualTo("ARCHERY");		
 		
 		
 	}

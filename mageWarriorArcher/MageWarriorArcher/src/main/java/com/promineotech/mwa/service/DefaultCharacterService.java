@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.promineotech.mwa.dao.CharacterDao;
 import com.promineotech.mwa.entity.Character;
@@ -21,5 +22,18 @@ public class DefaultCharacterService implements CharacterService {
 	    Collections.sort(characters);
 	    return characters;
 	  }
+	  
+		
+		@Transactional
+		@Override
+		public Character createNewCharacter(String name) {
+			return characterDao.saveCharacter(name);
+		}
+
+
+		@Override
+		public Character fetchCharacterById(Integer characterId) {
+			return characterDao.fetchCharacterById(characterId);
+		}
 
 }

@@ -15,18 +15,24 @@ import lombok.NoArgsConstructor;
 
 public class Character implements Comparable<Character> {
   
-  private Integer characterId;  
+  private int character_id;  
   private String name;  
   private String fightingStyle;
 
-@Override
+  
+  @Override
 public int compareTo(Character that) {
     // @formatter:off
     return Comparator
-        .comparing(Character::getCharacterId)
+        .comparing(Character::getCharacter_id)
         .thenComparing(Character::getName)
         .thenComparing(Character::getFightingStyle)
         .compare(this, that);      
     // @formatter:on
   }
+  
+  public Character(String name) {}
+  
+  public Character(String name, String fightingStyle) {}
+  
 }

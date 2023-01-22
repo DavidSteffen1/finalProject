@@ -6,5 +6,9 @@ import com.promineotech.mwa.entity.Character;
 public interface CharacterService {
 	
 	List<Character> fetchCharacters();
+	
+	Character createNewCharacter(String name);
+
+	Character fetchCharacterById(Integer characterId);
 
 }
