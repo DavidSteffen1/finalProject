@@ -30,7 +30,7 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 	  private NamedParameterJdbcTemplate jdbcTemplate;
 	  
 		@Override
-		public Character saveCharacter(String name) {
+		public Character createNewCharacter(String name) {
 			SqlParams params = generateInsertSql(name);
 			
 			KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -38,6 +38,7 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 			
 			int characterId = keyHolder.getKey().intValue();
 			
+			//try separate method to run generated sql query against database
 			runInsertSql(name);
 			
 			// @formatter:off
@@ -48,7 +49,31 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 			// @formatter:on
 		}
 		
+		/**
+		 * saveCharacter is not connected to database?
+		 */
 		private void runInsertSql(String name) {
+		
+			String sql = generateInsertSql(name).sql;
+			
+			try(Connection conn = DbConnection.getConnection()) {
+				startTransaction(conn);
+				
+				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+					
+						SqlParams params = new SqlParams();
+						
+						params.sql = sql;
+						params.source.addValue("name", name);
+						
+						jdbcTemplate.update(sql, params.source);
+
+					}
+				}
+			
+			catch(SQLException e) {
+				throw new DbException(e);
+				}
 			
 		}
 
@@ -77,10 +102,28 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 		public Character fetchCharacter(String name) {
 			String sql = "SELECT * FROM `character` WHERE name = :name";
 			
-			Map<String, Object> params = new HashMap<>();
-			params.put("name", name);
-		
-			return jdbcTemplate.query(sql, params, new CharacterResultSetExtractor());
+			try(Connection conn = DbConnection.getConnection()) {
+				startTransaction(conn);
+				
+				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+					try(ResultSet rs = stmt.executeQuery()) {
+						
+						Map<String, Object> params = new HashMap<>();
+						params.put("name", name);
+					
+						return jdbcTemplate.query(sql, params, new CharacterResultSetExtractor());
+					}
+				}
+			
+			catch(Exception e) {
+				rollbackTransaction(conn);
+				throw new DbException(e);
+				}			
+			}
+			
+			catch(SQLException e) {
+				throw new DbException(e);
+				}
 		}
 		
 		class CharacterResultSetExtractor implements ResultSetExtractor<Character> {
@@ -174,5 +217,33 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 					}
 				
 			}
+
+		/**
+		 *Deletes a character by name
+		 */
+		@Override
+		public void deleteCharacter(String name) {
+			String sql = "DELETE FROM `character` WHERE name = :name";
+			
+			try(Connection conn = DbConnection.getConnection()) {
+				startTransaction(conn);
+				
+				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
+						
+						SqlParams params = new SqlParams();
+						
+						params.sql = sql;
+						params.source.addValue("name", name);
+						
+						jdbcTemplate.update(sql, params.source);
+
+					}
+				}
+			
+			catch(SQLException e) {
+				throw new DbException(e);
+				}
+			
+		}
 
 	}

@@ -27,13 +27,19 @@ public class DefaultCharacterService implements CharacterService {
 		@Transactional
 		@Override
 		public Character createNewCharacter(String name) {
-			return characterDao.saveCharacter(name);
+			return characterDao.createNewCharacter(name);
 		}
 
 
 		@Override
 		public Character fetchCharacterById(Integer characterId) {
 			return characterDao.fetchCharacterById(characterId);
+		}
+
+
+		@Override
+		public void deleteCharacter(String name) {
+			characterDao.deleteCharacter(name);
 		}
 
 }

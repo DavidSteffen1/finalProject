@@ -98,7 +98,7 @@ public interface CharacterController {
 		}
 		)
 
-@PostMapping(path = "/new")
+@PostMapping(path = "/new/{name}")
 @ResponseStatus(code = HttpStatus.CREATED)
   public Character createNewCharacter(@RequestBody String name);
 
@@ -110,7 +110,7 @@ public interface CharacterController {
 		summary = "Delete a Character",
 		description = "Deletes the selected Character",
 		responses = {
-				@ApiResponse(responseCode = "201", 
+				@ApiResponse(responseCode = "204", 
 						description = "A selected Character is deleted", 
 						content = @Content(mediaType = "application/json", 
 						schema = @Schema(implementation = Character.class))),
@@ -133,7 +133,7 @@ public interface CharacterController {
 		}
 		)
 
-@PostMapping(path = "/delete")
+@DeleteMapping(path = "/delete/{name}")
 @ResponseStatus(code = HttpStatus.CREATED)
-  public Character deleteCharacter(@RequestBody String name);
+  public void deleteCharacter(@RequestBody String name);
 }

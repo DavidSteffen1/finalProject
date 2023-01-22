@@ -30,9 +30,8 @@ public class DefaultCharacterController implements CharacterController {
 }
 
 @Override
-public Character deleteCharacter(String name) {
-	// TODO Auto-generated method stub
-	return null;
+public void deleteCharacter(String name) {
+	characterService.deleteCharacter(name); 
 }
 
 }

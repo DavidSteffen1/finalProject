@@ -9,8 +9,10 @@ public interface CharacterDao {
 	
 	Character fetchCharacter(String name);
 
-	Character saveCharacter(String name);
+	Character createNewCharacter(String name);
 
 	Character fetchCharacterById(int character_id);
+
+	void deleteCharacter(String name);
 
 }
