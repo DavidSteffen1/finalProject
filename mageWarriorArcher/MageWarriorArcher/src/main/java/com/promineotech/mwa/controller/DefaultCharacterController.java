@@ -30,8 +30,24 @@ public class DefaultCharacterController implements CharacterController {
 }
 
 @Override
-public void deleteCharacter(String name) {
-	characterService.deleteCharacter(name); 
+public String deleteCharacter(String name) {
+	return characterService.deleteCharacter(name); 
+}
+
+@Override
+public Character updateCharacter(String name, String newName) {
+	return characterService.updateCharacter(name, newName);
+}
+
+@Override
+public Character fetchCharacter(String name) {
+	return characterService.fetchCharacter(name);
+}
+
+@Override
+public List<Character> fetchCharactersWithWeapons() {
+	// Build out list from return statement
+	return null;
 }
 
 }

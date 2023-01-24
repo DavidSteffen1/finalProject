@@ -38,8 +38,20 @@ public class DefaultCharacterService implements CharacterService {
 
 
 		@Override
-		public void deleteCharacter(String name) {
-			characterDao.deleteCharacter(name);
+		public String deleteCharacter(String name) {
+			return characterDao.deleteCharacter(name);
+		}
+
+
+		@Override
+		public Character updateCharacter(String name, String newName) {
+			return characterDao.updateCharacter(name, newName);
+		}
+
+
+		@Override
+		public Character fetchCharacter(String name) {
+			return characterDao.fetchCharacter(name);
 		}
 
 }

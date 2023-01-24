@@ -11,6 +11,10 @@ public interface CharacterService {
 
 	Character fetchCharacterById(Integer characterId);
 
-	void deleteCharacter(String name);
+	String deleteCharacter(String name);
+
+	Character updateCharacter(String name, String newName);
+
+	Character fetchCharacter(String name);
 
 }

@@ -28,10 +28,9 @@ CREATE TABLE weapons (
     
  CREATE TABLE character_armor (
 	character_id INT NOT NULL,
-    head_armor_id INT,
-    body_armor_id INT,
-	feet_armor_id INT,
-    FOREIGN KEY (character_id) REFERENCES `character`(character_id)
+    armor_id INT NOT NULL,
+    FOREIGN KEY (character_id) REFERENCES `character`(character_id),
+	FOREIGN KEY (armor_id) REFERENCES `armor`(armor_id)
     );   
     
 CREATE TABLE character_weapon (

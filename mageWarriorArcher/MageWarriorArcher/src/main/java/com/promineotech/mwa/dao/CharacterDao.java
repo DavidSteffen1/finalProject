@@ -13,6 +13,8 @@ public interface CharacterDao {
 
 	Character fetchCharacterById(int character_id);
 
-	void deleteCharacter(String name);
+	String deleteCharacter(String name);
+
+	Character updateCharacter(String name, String newName);
 
 }
