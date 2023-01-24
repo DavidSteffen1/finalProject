@@ -1,0 +1,7 @@
+Are Postman results proving method works?
+
+Are methods using try statements correctly?
+
+How do I fix fetchCharacterById and fetchcharacter(ByName)?
+
+Is many to many relationship planned correctly?
