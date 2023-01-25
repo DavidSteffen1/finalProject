@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.promineotech.mwa.dao.CharacterDao;
 import com.promineotech.mwa.entity.Character;
+import com.promineotech.mwa.entity.CharacterWithWeapons;
 
 @Service
 public class DefaultCharacterService implements CharacterService {
@@ -32,7 +33,7 @@ public class DefaultCharacterService implements CharacterService {
 
 
 		@Override
-		public Character fetchCharacterById(Integer characterId) {
+		public List<Character> fetchCharacterById(Integer characterId) {
 			return characterDao.fetchCharacterById(characterId);
 		}
 
@@ -44,14 +45,21 @@ public class DefaultCharacterService implements CharacterService {
 
 
 		@Override
-		public Character updateCharacter(String name, String newName) {
-			return characterDao.updateCharacter(name, newName);
+		public String updateCharacterName(String name, String newName) {
+			return characterDao.updateCharacterName(name, newName);
 		}
 
 
 		@Override
-		public Character fetchCharacter(String name) {
-			return characterDao.fetchCharacter(name);
+		public List<Character> fetchCharacterByName(String name) {
+			return characterDao.fetchCharacterByName(name);
+		}
+
+
+		@Override
+		public List<CharacterWithWeapons> fetchCharactersWithWeapons() {
+			return characterDao.fetchCharactersWithWeapons();
+			
 		}
 
 }

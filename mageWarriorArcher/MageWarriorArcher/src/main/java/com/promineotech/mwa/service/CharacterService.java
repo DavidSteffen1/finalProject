@@ -2,6 +2,7 @@ package com.promineotech.mwa.service;
 
 import java.util.List;
 import com.promineotech.mwa.entity.Character;
+import com.promineotech.mwa.entity.CharacterWithWeapons;
 
 public interface CharacterService {
 	
@@ -9,12 +10,14 @@ public interface CharacterService {
 	
 	Character createNewCharacter(String name);
 
-	Character fetchCharacterById(Integer characterId);
+	List<Character> fetchCharacterById(Integer characterId);
 
 	String deleteCharacter(String name);
 
-	Character updateCharacter(String name, String newName);
+	String updateCharacterName(String name, String newName);
 
-	Character fetchCharacter(String name);
+	List<Character> fetchCharacterByName(String name);
+
+	List<CharacterWithWeapons> fetchCharactersWithWeapons();
 
 }

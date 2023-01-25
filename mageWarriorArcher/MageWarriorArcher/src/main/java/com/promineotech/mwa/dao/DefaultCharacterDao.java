@@ -1,34 +1,33 @@
 package com.promineotech.mwa.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.promineotech.mwa.entity.Character;
-import com.promineotech.mwa.exception.DbException;
+import com.promineotech.mwa.entity.CharacterWithWeapons;
 
 @Component
-
+@Repository
 public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 	  
 	  @Autowired
 	  private NamedParameterJdbcTemplate jdbcTemplate;
 	  
-		@Override
+	  	@Override
 		public Character createNewCharacter(String name) {
 			SqlParams params = generateInsertSql(name);
 			
@@ -37,9 +36,6 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 			
 			int characterId = keyHolder.getKey().intValue();
 			
-			//try separate method to run generated sql query against database
-			//runInsertSql(name);
-			
 			// @formatter:off
 			return Character.builder()
 					.character_id(characterId)
@@ -47,34 +43,6 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 					.build();
 			// @formatter:on
 		}
-		
-		/**
-		 * saveCharacter is not connected to database?
-		 */
-//		private void runInsertSql(String name) {
-//		
-//			String sql = generateInsertSql(name).sql;
-//			
-//			try(Connection conn = DbConnection.getConnection()) {
-//				startTransaction(conn);
-//				
-//				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-//					
-//						SqlParams params = new SqlParams();
-//						
-//						params.sql = sql;
-//						params.source.addValue("name", name);
-//						
-//						jdbcTemplate.update(sql, params.source);
-//
-//					}
-//				}
-//			
-//			catch(SQLException e) {
-//				throw new DbException(e);
-//				}
-//			
-//		}
 
 		private SqlParams generateInsertSql(String name) {
 			// @formatter:off
@@ -94,6 +62,7 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 			return params;
 		}		
 		
+		 
 		  /**
 		 *Fetches all characters
 		 */
@@ -101,32 +70,22 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 		  public List<Character> fetchCharacters() {
 				String sql = "SELECT * FROM `character` ORDER BY character_id";
 				
-				try(Connection conn = DbConnection.getConnection()) {
-					startTransaction(conn);
-					
-					try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-						try(ResultSet rs = stmt.executeQuery()) {
-							List<Character> characters = new LinkedList<>();
-							
-							while(rs.next()) {
-								characters.add(extract(rs, Character.class));
-								}
-						
-						return characters;	
-						}
-					}
-				
-				catch(Exception e) {
-					rollbackTransaction(conn);
-					throw new DbException(e);
-					}			
-				}
-				
-				catch(SQLException e) {
-					throw new DbException(e);
-					}
-				
-			}
+			    Map<String,Object> parameters = new HashMap<>();
+
+			    List<Character> characters = jdbcTemplate.query(sql, parameters, new RowMapper<>() {
+
+			        @Override
+			        public Character mapRow(ResultSet rs, int rowNum) throws SQLException {
+			          // @formatter:off
+			          return Character.builder()
+			              .character_id((rs.getInt("character_id")))
+			              .name(rs.getString("name"))
+			              .build();
+			          // @formatter:on
+			        	}
+			        });
+				return characters;
+			    }
 		
 		/**
 		 *Fetches Character by name
@@ -134,66 +93,79 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 		 *Builder?
 		 */
 		@Override
-		public Character fetchCharacter(String name) {
+		public List<Character> fetchCharacterByName(String name) {
 			String sql = "SELECT * FROM `character` WHERE name = :name";
-			
-			try(Connection conn = DbConnection.getConnection()) {
-				startTransaction(conn);
-				
-				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-					try(ResultSet rs = stmt.executeQuery()) {
-						
-						Map<String, Object> params = new HashMap<>();
-						params.put("name", name);
-					
-					    return jdbcTemplate.query(sql, params, new CharacterResultSetExtractor());
-					}
-				}
-			
-			catch(Exception e) {
-				rollbackTransaction(conn);
-				throw new DbException(e);
-				}			
-			}
-			
-			catch(SQLException e) {
-				throw new DbException(e);
-				}
-		}
+
+		    Map<String,Object> parameters = new HashMap<>();
+		    parameters.put("name", name);
+
+		    List<Character> characters = jdbcTemplate.query(sql, parameters, new RowMapper<>() {
+
+		        @Override
+		        public Character mapRow(ResultSet rs, int rowNum) throws SQLException {
+		          // @formatter:off
+		          return Character.builder()
+		              .character_id((rs.getInt("character_id")))
+		              .name(rs.getString("name"))
+		              .build();
+		          // @formatter:on
+		        	}
+		        });
+			return characters;
+		    }
 
 		  /**
 		 *Fetches Character by Id
 		 *Returns SQL syntax error
 		 */
 		@Override
-		  public Character fetchCharacterById(int character_id) {
+		  public List<Character> fetchCharacterById(int character_id) {
 				String sql = "SELECT * FROM `character` WHERE character_id = :character_id";		
 				
-				try(Connection conn = DbConnection.getConnection()) {
-					startTransaction(conn);
-					
-					try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-						try(ResultSet rs = stmt.executeQuery()) {
-							
-							Map<String, Object> params = new HashMap<>();
-							params.put("character_id", character_id);
-						
-							return jdbcTemplate.query(sql, params, new CharacterResultSetExtractor());
-						}
-					}
-				
-				catch(Exception e) {
-					rollbackTransaction(conn);
-					throw new DbException(e);
-					}			
-				}
-				
-				catch(SQLException e) {
-					throw new DbException(e);
-					}
-				
-			}
+			    Map<String,Object> parameters = new HashMap<>();
+			    parameters.put("character_id", character_id);
 
+			    List<Character> characters = jdbcTemplate.query(sql, parameters, new RowMapper<>() {
+
+			        @Override
+			        public Character mapRow(ResultSet rs, int rowNum) throws SQLException {
+			          // @formatter:off
+			          return Character.builder()
+			              .character_id((rs.getInt("character_id")))
+			              .name(rs.getString("name"))
+			              .build();
+			          // @formatter:on
+			        	}
+			        });
+				return characters;
+			    }
+
+
+		/**
+		 *Updates a character by name
+		 */
+		@Override
+		public String updateCharacterName(String name, String newName) {
+			//Character characterToUpdate = fetchCharacterByName(name).get(0);
+			
+			// @formatter:off
+			String sql = "UPDATE `character` "
+					+ "SET name = :newName "
+					+ "WHERE name = :name";
+			// @formatter:on	
+			
+			SqlParams params = new SqlParams();
+			
+			params.sql = sql;
+			params.source.addValue("newName", newName);
+			params.source.addValue("name", name);
+			
+			jdbcTemplate.update(sql, params.source);
+			
+			return "Changed character name from " + name + " to " + newName;
+					
+		}
+		
 		/**
 		 *Deletes a character by name
 		 * @return 
@@ -201,12 +173,6 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 		@Override
 		public String deleteCharacter(String name) {
 			String sql = "DELETE FROM `character` WHERE name = :name";
-			//String deleteMessage = 
-			
-			try(Connection conn = DbConnection.getConnection()) {
-				startTransaction(conn);
-				
-				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
 						
 						SqlParams params = new SqlParams();
 						
@@ -214,21 +180,33 @@ public class DefaultCharacterDao extends DaoBase implements CharacterDao {
 						params.source.addValue("name", name);
 						
 						return "Deleted " + jdbcTemplate.update(sql, params.source) + " character(s) named " + name;
-
-					}
-				}
-			
-			catch(SQLException e) {
-				throw new DbException(e);
-				}
 			
 		}
 		
-
+		/**
+		 *Read operation on many-to-many relationship table
+		 * @return 
+		 */
 		@Override
-		public Character updateCharacter(String name, String newName) {
-			// Need fetchCharacter method
-			return null;
+		public List<CharacterWithWeapons> fetchCharactersWithWeapons() {
+			String sql = "SELECT * FROM character_weapon ORDER BY character_id";
+			
+		    Map<String,Object> parameters = new HashMap<>();
+		    
+		    List<CharacterWithWeapons> charactersWithWeapons = jdbcTemplate.query(sql, parameters, new RowMapper<CharacterWithWeapons>() {
+
+		        @Override
+		        public CharacterWithWeapons mapRow(ResultSet rs, int rowNum) throws SQLException {
+		          // @formatter:off
+		          return CharacterWithWeapons.builder()
+		              .character_id((rs.getInt("character_id")))
+		              .weapon_id(rs.getInt("weapon_id"))
+		              .build();
+		          // @formatter:on
+		        	}
+		        });
+			return charactersWithWeapons;
+
 		}
 		
 		class CharacterResultSetExtractor implements ResultSetExtractor<Character> {

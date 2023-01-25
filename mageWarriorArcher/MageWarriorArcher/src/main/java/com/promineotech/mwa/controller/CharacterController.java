@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.promineotech.mwa.entity.Character;
+import com.promineotech.mwa.entity.CharacterWithWeapons;
+
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -59,13 +61,13 @@ public interface CharacterController {
   public List<Character> fetchCharacters();
 
 
-  @GetMapping("/{character_id}")
+  @GetMapping("/id/{character_id}")
   @ResponseStatus(code = HttpStatus.OK)
-  public Character fetchCharacterById(@PathVariable("character_id") int character_id);
+  public List<Character> fetchCharacterById(@PathVariable("character_id") int character_id);
   
-  @GetMapping("/placeholder/{name}")
+  @GetMapping("/name/{name}")
   @ResponseStatus(code = HttpStatus.OK)
-  public Character fetchCharacter(@PathVariable("name") String name);
+  public List<Character> fetchCharacterByName(@PathVariable("name") String name);
 
 
 /**
@@ -146,7 +148,7 @@ public interface CharacterController {
 
 @PutMapping("/update/{name}/{newName}")
 @ResponseStatus(code = HttpStatus.CREATED)
-  public Character updateCharacter(@RequestBody @PathVariable("name") String name, @PathVariable("newName") String newName);
+  public String updateCharacterName(@RequestBody @PathVariable("name") String name, @PathVariable("newName") String newName);
 
 /**
  * @return 
@@ -206,5 +208,5 @@ public interface CharacterController {
 
 	  @GetMapping("/weapons/all")
 	  @ResponseStatus(code = HttpStatus.OK)
-	  public List<Character> fetchCharactersWithWeapons();
+	  public List<CharacterWithWeapons> fetchCharactersWithWeapons();
 }

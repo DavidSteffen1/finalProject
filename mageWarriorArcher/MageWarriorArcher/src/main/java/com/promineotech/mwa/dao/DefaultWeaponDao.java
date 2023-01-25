@@ -1,51 +1,46 @@
 package com.promineotech.mwa.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import com.promineotech.mwa.entity.Weapon;
-import com.promineotech.mwa.exception.DbException;
 
 @Component
-@Service
+@Repository
 
 public class DefaultWeaponDao extends DaoBase implements WeaponDao {
-	  
+
+	  @Autowired
+	  private NamedParameterJdbcTemplate jdbcTemplate;
+	
 	  @Override
 	  public List<Weapon> fetchWeapons() {
 			String sql = "SELECT * FROM weapons ORDER BY weapon_id";
 			
-			try(Connection conn = DbConnection.getConnection()) {
-				startTransaction(conn);
-				
-				try(PreparedStatement stmt = conn.prepareStatement(sql)) {
-					try(ResultSet rs = stmt.executeQuery()) {
-						List<Weapon> weapons = new LinkedList<>();
-						
-						while(rs.next()) {
-							weapons.add(extract(rs, Weapon.class));
-							}
-					
-					return weapons;	
-					}
-				}
-			
-			catch(Exception e) {
-				rollbackTransaction(conn);
-				throw new DbException(e);
-				}			
-			}
-			
-			catch(SQLException e) {
-				throw new DbException(e);
-				}
-			
-		}
+		    Map<String,Object> parameters = new HashMap<>();
+
+		    List<Weapon> weapons = jdbcTemplate.query(sql, parameters, new RowMapper<>() {
+
+		        @Override
+		        public Weapon mapRow(ResultSet rs, int rowNum) throws SQLException {
+		          // @formatter:off
+		          return Weapon.builder()
+		              .weaponId((rs.getInt("weapon_id")))
+		              .name(rs.getString("name"))
+		              .effectiveness(rs.getInt("effectiveness"))
+		              .build();
+		          // @formatter:on
+		        	}
+		        });
+			return weapons;
+		    }
 
 	}

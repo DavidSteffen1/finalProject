@@ -2,19 +2,22 @@ package com.promineotech.mwa.dao;
 
 import java.util.List;
 import com.promineotech.mwa.entity.Character;
+import com.promineotech.mwa.entity.CharacterWithWeapons;
 
 public interface CharacterDao {
 	
 	List<Character> fetchCharacters();
 	
-	Character fetchCharacter(String name);
+	List<Character> fetchCharacterByName(String name);
 
 	Character createNewCharacter(String name);
 
-	Character fetchCharacterById(int character_id);
+	List<Character> fetchCharacterById(int character_id);
 
 	String deleteCharacter(String name);
 
-	Character updateCharacter(String name, String newName);
+	String updateCharacterName(String name, String newName);
+
+	List<CharacterWithWeapons> fetchCharactersWithWeapons();
 
 }
